@@ -1,6 +1,9 @@
-//Global variable where profile information will appear
+//Where profile information will appear
 const overview = document.querySelector(".overview");
+//Github username
 const username = "alana-nanz";
+//Unordered list to display the repos list
+const repoList = document.querySelector(".repo-list");
 
 const gitUserInfo = async function () {
     const userInfo = await fetch (`http://api.github.com/users/${username}`);
@@ -25,4 +28,21 @@ const displayUserInfo = function (data) {
         </div>
     `;
     overview.append(div);
+    displayUserRepos();
+};
+
+const displayUserRepos = async function () {
+    const userRepos = await fetch (`http://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const repoData = await userRepos.json();
+    //console.log(repoData);
+    displayRepoInfo(repoData);
+};
+
+const displayRepoInfo = function (repos) {
+    for (const repo of repos) {
+        const repoItem = document.createElement("li");
+        repoItem.classList.add("repo");
+        repoItem.innerHTML = `<h3>${repo.name}</h3`;
+        repoList.append(repoItem);
+    }
 };
